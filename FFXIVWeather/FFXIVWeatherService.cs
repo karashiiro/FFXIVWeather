@@ -106,7 +106,7 @@ namespace FFXIVWeather
 
         private TerriType GetTerritory(int terriTypeId)
         {
-            var terriType = this.terriTypes.FirstOrDefault(ttwr => ttwr.Id == terriTypeId);
+            var terriType = this.terriTypes.FirstOrDefault(tt => tt.Id == terriTypeId);
             if (terriType == null) throw new ArgumentException("Specified territory type does not exist.", nameof(terriTypeId));
             return terriType;
         }
