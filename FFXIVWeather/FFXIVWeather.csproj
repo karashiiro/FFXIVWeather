@@ -10,12 +10,19 @@
 	<PackageTags>ffxiv</PackageTags>
 	<Description>FFXIV weather forecast library for C# applications</Description>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<Version>1.0.1</Version>
+	<PackageLicenseExpression></PackageLicenseExpression>
+	<PackageLicenseFile>README.md</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Data\terriTypes.json" />
     <None Remove="Data\weatherKinds.json" />
     <None Remove="Data\weatherRateIndices.json" />
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
