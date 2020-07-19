@@ -1,5 +1,6 @@
 ﻿using FFXIVWeather.Models;
 using System;
+using System.Collections.Generic;
 
 namespace FFXIVWeather
 {
@@ -14,8 +15,8 @@ namespace FFXIVWeather
         /// <param name="count">The number of entries to return.</param>
         /// <param name="secondIncrement">The offset in seconds between forecasts.</param>
         /// <param name="initialOffset">The offset in seconds from the current moment to begin forecasting for.</param>
-        /// <returns>An array of <see cref="Weather"/>/start time tuples for the specified teritory type.</returns>
-        (Weather, DateTime)[] GetForecast(int terriTypeId, uint count, double secondIncrement, double initialOffset);
+        /// <returns>A list of <see cref="Weather"/>/start time tuples for the specified teritory type.</returns>
+        IList<(Weather, DateTime)> GetForecast(int terriTypeId, uint count, double secondIncrement, double initialOffset);
 
         /// <summary>
         ///     Returns the next <paramref name="count"/> forecast entries for the provided place,
@@ -27,8 +28,8 @@ namespace FFXIVWeather
         /// <param name="secondIncrement">The offset in seconds between forecasts.</param>
         /// <param name="initialOffset">The offset in seconds from the current moment to begin forecasting for.</param>
         /// <param name="lang">The language to read the place name in.</param>
-        /// <returns>An array of <see cref="Weather"/>/start time tuples for the specified place.</returns>
-        (Weather, DateTime)[] GetForecast(string placeName, uint count, double secondIncrement, double initialOffset, LangKind lang);
+        /// <returns>A list of <see cref="Weather"/>/start time tuples for the specified place.</returns>
+        IList<(Weather, DateTime)> GetForecast(string placeName, uint count, double secondIncrement, double initialOffset, LangKind lang);
 
         /// <summary>
         ///     Returns the next <paramref name="count"/> forecast entries for the provided territory,
@@ -39,8 +40,8 @@ namespace FFXIVWeather
         /// <param name="count">The number of entries to return.</param>
         /// <param name="secondIncrement">The offset in seconds between forecasts.</param>
         /// <param name="initialOffset">The offset in seconds from the current moment to begin forecasting for.</param>
-        /// <returns>An array of <see cref="Weather"/>/start time tuples for the specified territory.</returns>
-        (Weather, DateTime)[] GetForecast(TerriType terriType, uint count, double secondIncrement, double initialOffset);
+        /// <returns>A list of <see cref="Weather"/>/start time tuples for the specified territory.</returns>
+        IList<(Weather, DateTime)> GetForecast(TerriType terriType, uint count, double secondIncrement, double initialOffset);
 
         /// <summary>
         ///     Returns the current <see cref="Weather"/> and its start time, relative to the provided offset in seconds,
@@ -52,7 +53,8 @@ namespace FFXIVWeather
         (Weather, DateTime) GetCurrentWeather(int terriTypeId, double initialOffset);
 
         /// <summary>
-        /// 
+        ///     Returns the current <see cref="Weather"/> and its start time, relative to the provided offset in seconds,
+        ///     for the specified place.
         /// </summary>
         /// <param name="placeName">The place to calculate a forecast for.</param>
         /// <param name="initialOffset">The offset in seconds from the current moment to begin forecasting for.</param>

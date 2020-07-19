@@ -32,13 +32,13 @@ namespace FFXIVWeather
             this.terriTypes = LoadManifestResource<TerriType[]>("FFXIVWeather.Data.terriTypes.json");
         }
 
-        public (Weather, DateTime)[] GetForecast(string placeName, uint count = 1, double secondIncrement = WeatherPeriod, double initialOffset = 0 * Minutes, LangKind lang = LangKind.En)
+        public IList<(Weather, DateTime)> GetForecast(string placeName, uint count = 1, double secondIncrement = WeatherPeriod, double initialOffset = 0 * Minutes, LangKind lang = LangKind.En)
             => GetForecast(GetTerritory(placeName, lang), count, secondIncrement, initialOffset);
 
-        public (Weather, DateTime)[] GetForecast(int terriTypeId, uint count = 1, double secondIncrement = WeatherPeriod, double initialOffset = 0 * Minutes)
+        public IList<(Weather, DateTime)> GetForecast(int terriTypeId, uint count = 1, double secondIncrement = WeatherPeriod, double initialOffset = 0 * Minutes)
             => GetForecast(GetTerritory(terriTypeId), count, secondIncrement, initialOffset);
 
-        public (Weather, DateTime)[] GetForecast(TerriType terriType, uint count = 1, double secondIncrement = WeatherPeriod, double initialOffset = 0 * Minutes)
+        public IList<(Weather, DateTime)> GetForecast(TerriType terriType, uint count = 1, double secondIncrement = WeatherPeriod, double initialOffset = 0 * Minutes)
         {
             if (count == 0) return new (Weather, DateTime)[0];
 
@@ -56,7 +56,7 @@ namespace FFXIVWeather
                 forecast.Add((weather, time));
             }
 
-            return forecast.ToArray();
+            return forecast;
         }
 
         public (Weather, DateTime) GetCurrentWeather(string placeName, double initialOffset = 0 * Minutes, LangKind lang = LangKind.En)
