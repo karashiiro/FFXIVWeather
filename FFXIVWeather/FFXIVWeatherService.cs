@@ -23,6 +23,10 @@ namespace FFXIVWeather
         public FFXIVWeatherService()
         {
             // Load member variables from JSON stores
+            // These should all be sorted in ascending order so we can do simple array index stuff later
+            // as opposed to using LINQ, which is slightly slower. The data is sorted when it's requested
+            // from the relevant APIs already, so we don't need to worry about sorting it ourselves, at
+            // least at the time of writing.
             this.weatherKinds = LoadManifestResource<Weather[]>("FFXIVWeather.Data.weatherKinds.json");
             this.weatherRateIndices = LoadManifestResource<WeatherRateIndex[]>("FFXIVWeather.Data.weatherRateIndices.json");
             this.terriTypes = LoadManifestResource<TerriType[]>("FFXIVWeather.Data.terriTypes.json");
@@ -38,9 +42,7 @@ namespace FFXIVWeather
         {
             if (count == 0) return new (Weather, DateTime)[0];
 
-            // Get the weather rate for the specified territory
-            var terriTypeWeatherRateId = terriType.WeatherRate;
-            var weatherRateIndex = this.weatherRateIndices.First(wri => wri.Id == terriTypeWeatherRateId);
+            var weatherRateIndex = GetTerriTypeWeatherRateIndex(terriType);
 
             // Initialize the return value with the current stuff
             var forecast = new List<(Weather, DateTime)> { GetCurrentWeather(terriType, initialOffset) };
@@ -50,10 +52,7 @@ namespace FFXIVWeather
             {
                 var time = forecast[0].Item2.AddSeconds(i * secondIncrement + initialOffset);
                 var weatherTarget = CalculateTarget(time);
-                // Based on our constraints, we know there're no null case here.
-                // Every zone has at least one target at 100, and weatherTarget's domain is [0,99].
-                var weatherId = weatherRateIndex.Rates.First(w => weatherTarget < w.Rate).Id;
-                var weather = this.weatherKinds.FirstOrDefault(w => w.Id == weatherId);
+                var weather = GetWeather(weatherRateIndex, weatherTarget);
                 forecast.Add((weather, time));
             }
 
@@ -68,17 +67,13 @@ namespace FFXIVWeather
 
         public (Weather, DateTime) GetCurrentWeather(TerriType terriType, double initialOffset = 0 * Minutes)
         {
-            // Get the weather rates for the territory
-            var terriTypeWeatherRateId = terriType.WeatherRate;
-            var weatherRateIndex = this.weatherRateIndices.First(wri => wri.Id == terriTypeWeatherRateId);
-
             // Calibrate the time to the beginning of the weather period
-            var now = DateTime.UtcNow.AddMilliseconds(-DateTime.UtcNow.Millisecond).AddSeconds(initialOffset);
-            var target = CalculateTarget(now);
-
+            var now = DateTime.UtcNow;
+            var adjustedNow = now.AddMilliseconds(-now.Millisecond).AddSeconds(initialOffset);
+            var target = CalculateTarget(adjustedNow);
             // The overhead of a binary search actually makes a linear search significantly faster here most of the time,
-            // looking at ~14000 ticks vs ~18000 ticks on average.
-            var rootTime = now;
+            // looking at ~14000 ticks vs ~18000 ticks on average. For the record, I only tested that for fun.
+            var rootTime = adjustedNow;
             var anyIterations = false;
             while (CalculateTarget(rootTime) == target)
             {
@@ -90,11 +85,26 @@ namespace FFXIVWeather
             if (anyIterations)
                 rootTime = rootTime.AddSeconds(1);
 
-            // Get the current weather
-            var weatherId = weatherRateIndex.Rates.First(w => target < w.Rate).Id;
-            var weather = this.weatherKinds.FirstOrDefault(w => w.Id == weatherId);
+            var weatherRateIndex = GetTerriTypeWeatherRateIndex(terriType);
+            var weather = GetWeather(weatherRateIndex, target);
 
             return (weather, rootTime);
+        }
+
+        private Weather GetWeather(WeatherRateIndex weatherRateIndex, int target)
+        {
+            // Based on our constraints, we know there're no null case here.
+            // Every zone has at least one target at 100, and weatherTarget's domain is [0,99].
+            var weatherId = weatherRateIndex.Rates.First(w => target < w.Rate).Id;
+            var weather = this.weatherKinds[weatherId - 1];
+            return weather;
+        }
+
+        private WeatherRateIndex GetTerriTypeWeatherRateIndex(TerriType terriType)
+        {
+            var terriTypeWeatherRateId = terriType.WeatherRate;
+            var weatherRateIndex = this.weatherRateIndices[terriTypeWeatherRateId];
+            return weatherRateIndex;
         }
 
         private TerriType GetTerritory(string placeName, LangKind lang)
