@@ -24,9 +24,9 @@ namespace FFXIVWeather
         {
             // Load member variables from JSON stores
             // These should all be sorted in ascending order so we can do simple array index stuff later
-            // as opposed to using LINQ, which is slightly slower. The data is sorted when it's requested
-            // from the relevant APIs already, so we don't need to worry about sorting it ourselves, at
-            // least at the time of writing.
+            // as opposed to using LINQ, which is slightly slower (benchmarked). The data is sorted when
+            // it's requested from the relevant APIs already, so we don't need to worry about sorting it
+            // ourselves, at least at the time of writing.
             this.weatherKinds = LoadManifestResource<Weather[]>("FFXIVWeather.Data.weatherKinds.json");
             this.weatherRateIndices = LoadManifestResource<WeatherRateIndex[]>("FFXIVWeather.Data.weatherRateIndices.json");
             this.terriTypes = LoadManifestResource<TerriType[]>("FFXIVWeather.Data.terriTypes.json");
@@ -67,23 +67,8 @@ namespace FFXIVWeather
 
         public (Weather, DateTime) GetCurrentWeather(TerriType terriType, double initialOffset = 0 * Minutes)
         {
-            // Calibrate the time to the beginning of the weather period
-            var now = DateTime.UtcNow;
-            var adjustedNow = now.AddMilliseconds(-now.Millisecond).AddSeconds(initialOffset);
-            var target = CalculateTarget(adjustedNow);
-            // The overhead of a binary search actually makes a linear search significantly faster here most of the time,
-            // looking at ~14000 ticks vs ~18000 ticks on average. For the record, I only tested that for fun.
-            var rootTime = adjustedNow;
-            var anyIterations = false;
-            while (CalculateTarget(rootTime) == target)
-            {
-                rootTime = rootTime.AddSeconds(-1);
-                anyIterations = true;
-            }
-            // This handles the edge case where the while loop doesn't run, and more efficiently than manipulating
-            // the root time in the while condition.
-            if (anyIterations)
-                rootTime = rootTime.AddSeconds(1);
+            var rootTime = GetCurrentWeatherRootTime(initialOffset);
+            var target = CalculateTarget(rootTime);
 
             var weatherRateIndex = GetTerriTypeWeatherRateIndex(terriType);
             var weather = GetWeather(weatherRateIndex, target);
@@ -119,6 +104,28 @@ namespace FFXIVWeather
             var terriType = this.terriTypes.FirstOrDefault(tt => tt.Id == terriTypeId);
             if (terriType == null) throw new ArgumentException("Specified territory type does not exist.", nameof(terriTypeId));
             return terriType;
+        }
+
+        private static DateTime GetCurrentWeatherRootTime(double initialOffset)
+        {
+            // Calibrate the time to the beginning of the weather period
+            var now = DateTime.UtcNow;
+            var adjustedNow = now.AddMilliseconds(-now.Millisecond).AddSeconds(initialOffset);
+            var target = CalculateTarget(adjustedNow);
+            // The overhead of a binary search actually makes a linear search significantly faster here most of the time,
+            // looking at ~14000 ticks vs ~18000 ticks on average. For the record, I only tested that for fun.
+            var rootTime = adjustedNow;
+            var anyIterations = false;
+            while (CalculateTarget(rootTime) == target)
+            {
+                rootTime = rootTime.AddSeconds(-1);
+                anyIterations = true;
+            }
+            // This handles the edge case where the while loop doesn't run, and more efficiently than manipulating
+            // the root time in the while condition.
+            if (anyIterations)
+                rootTime = rootTime.AddSeconds(1);
+            return rootTime;
         }
 
         /// <summary>
