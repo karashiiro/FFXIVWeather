@@ -28,10 +28,18 @@ namespace FFXIVWeatherResourceGenerator
             Console.WriteLine("Processing...");
             var dataStore = JObject.Parse(dataStoreRaw);
             
-            var regionData = dataStore["skywatcher"]["weatherRateIndex"]
+            var weatherRateIndices = dataStore["skywatcher"]["weatherRateIndex"]
                 .ToObject<IDictionary<string, WeatherRateIndex>>()
                 .Select(kvp => kvp.Value);
-            File.WriteAllText(WeatherRateIndicesOutputPath, JsonConvert.SerializeObject(regionData));
+            // Quick validation of a design assumption.
+            var wriLastN = 0;
+            foreach (var weatherRateIndex in weatherRateIndices)
+            {
+                if (weatherRateIndex.Id != wriLastN)
+                    throw new InvalidDataException("Data is not continuous and/or sorted in ascending order.");
+                wriLastN++;
+            }
+            File.WriteAllText(WeatherRateIndicesOutputPath, JsonConvert.SerializeObject(weatherRateIndices));
 
             // XIVAPI
             Console.WriteLine("Requesting data from XIVAPI and FFCafe...");
@@ -78,6 +86,15 @@ namespace FFXIVWeatherResourceGenerator
                         continue;
                     terriType.NameZh = cafeCsv.GetField<string>(1);
                 }
+            }
+
+            // Quick validation of a design assumption.
+            var ttLastN = 0;
+            foreach (var terriType in terriTypes)
+            {
+                if (terriType.Id < ttLastN)
+                    throw new InvalidDataException("Data is not sorted in ascending order.");
+                ttLastN = terriType.Id;
             }
             
             File.WriteAllText(TerriTypesOutputPath, JsonConvert.SerializeObject(terriTypes));
@@ -126,6 +143,15 @@ namespace FFXIVWeatherResourceGenerator
                 }
             }
 
+
+            // Quick validation of a design assumption.
+            var wkLastN = 1;
+            foreach (var weatherKind in weatherKinds)
+            {
+                if (weatherKind.Id != wkLastN)
+                    throw new InvalidDataException("Data is not continuous and/or sorted in ascending order.");
+                wkLastN++;
+            }
             File.WriteAllText(WeatherKindsOutputPath, JsonConvert.SerializeObject(weatherKinds));
 
             Console.WriteLine("Done!");
