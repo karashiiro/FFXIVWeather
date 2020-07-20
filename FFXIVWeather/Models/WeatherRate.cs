@@ -4,11 +4,11 @@ namespace FFXIVWeather.Models
 {
     public class WeatherRate
     {
-        [JsonProperty("weather")]
-        public int Id { get; private set; }
+        [JsonProperty("id")]
+        public int Id { get; set; }
 
         [JsonProperty("rate")]
 
-        public int Rate { get; private set; }
+        public int Rate { get; set; }
     }
 }

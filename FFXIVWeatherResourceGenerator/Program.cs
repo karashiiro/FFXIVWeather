@@ -27,10 +27,25 @@ namespace FFXIVWeatherResourceGenerator
 
             Console.WriteLine("Processing...");
             var dataStore = JObject.Parse(dataStoreRaw);
-            
-            var weatherRateIndices = dataStore["skywatcher"]["weatherRateIndex"]
-                .ToObject<IDictionary<string, WeatherRateIndex>>()
-                .Select(kvp => kvp.Value);
+
+            var weatherRateIndices = new List<WeatherRateIndex>();
+            var wris = dataStore["skywatcher"]["weatherRateIndex"].Children()
+                .Select(token => token.Children().First());
+            foreach (var wri in wris)
+            {
+                weatherRateIndices.Add(new WeatherRateIndex
+                {
+                    Id = wri["id"].ToObject<int>(),
+                    Rates = wri["rates"].Children()
+                        .Select(rate => new WeatherRate
+                        {
+                            Id = rate["weather"].ToObject<int>(),
+                            Rate = rate["rate"].ToObject<int>(),
+                        })
+                        .ToArray(),
+                });
+            }
+
             // Quick validation of a design assumption.
             var wriLastN = 0;
             foreach (var weatherRateIndex in weatherRateIndices)
