@@ -47,8 +47,8 @@ namespace FFXIVWeatherResourceGenerator
 
             {
                 var page = 1;
-                var pageTotal = 0;
-                do
+                var pageTotal = 1;
+                while (page <= pageTotal)
                 {
                     var dataStore2Raw = http.GetStringAsync(new Uri($"https://xivapi.com/TerritoryType?columns=ID,WeatherRate,PlaceName&Page={page}")).GetAwaiter().GetResult();
                     var dataStore2 = JObject.Parse(dataStore2Raw);
@@ -72,7 +72,6 @@ namespace FFXIVWeatherResourceGenerator
 
                     page++;
                 }
-                while (page < pageTotal);
 
                 var cafeCsvRaw = http.GetStreamAsync(new Uri("https://raw.githubusercontent.com/thewakingsands/ffxiv-datamining-cn/master/PlaceName.csv")).GetAwaiter().GetResult();
                 using var cafeSr = new StreamReader(cafeCsvRaw);
@@ -103,8 +102,8 @@ namespace FFXIVWeatherResourceGenerator
 
             {
                 var page = 1;
-                var pageTotal = 0;
-                do
+                var pageTotal = 1;
+                while (page <= pageTotal)
                 {
                     var dataStore2Raw = http.GetStringAsync(new Uri($"https://xivapi.com/Weather?columns=ID,Name_en,Name_de,Name_fr,Name_ja&Page={page}")).GetAwaiter().GetResult();
                     var dataStore2 = JObject.Parse(dataStore2Raw);
@@ -114,7 +113,7 @@ namespace FFXIVWeatherResourceGenerator
                     foreach (var child in dataStore2["Results"].Children())
                     {
                         var id = child["ID"].ToObject<int>();
-
+                        
                         weatherKinds.Add(new Weather
                         {
                             Id = id,
@@ -127,7 +126,6 @@ namespace FFXIVWeatherResourceGenerator
 
                     page++;
                 }
-                while (page < pageTotal);
 
                 var cafeCsvRaw = http.GetStreamAsync(new Uri("https://raw.githubusercontent.com/thewakingsands/ffxiv-datamining-cn/master/Weather.csv")).GetAwaiter().GetResult();
                 using var cafeSr = new StreamReader(cafeCsvRaw);
