@@ -1,7 +1,7 @@
 # FFXIVWeather
 FFXIV weather forecast library for C# applications.
 
-Credit to [Garland Tools](https://www.garlandtools.org/) for crowdsourced weather data, and [XIVAPI](https://xivapi.com/) and [FFCafe](https://ffcafe.org/) for game data.
+Credit to [Garland Tools](https://www.garlandtools.org/) for weather data, and [XIVAPI](https://xivapi.com/) and [FFCafe](https://ffcafe.org/) for game data.
 
 ## Installation
 `Install-Package FFXIVWeather` or other methods as described [here](https://www.nuget.org/packages/FFXIVWeather/).
