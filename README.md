@@ -45,3 +45,9 @@ Weather for Eureka Pyros:
 |       Umbral Wind     |       300m    |
 |       Thunder         |       323m    |
 ```
+## Maintaining
+In the event that I cease to maintain this library and [ffxivweather-py](https://github.com/karashiiro/ffxivweather-py) before game content updates cease, here's the patch-update process:
+1. Run the resource generator, which will output the 3 JSON resources into the library's data directory.
+2. Compile and publish the library.
+3. Copy the 3 JSON resources to ffxivweather-py's `store` directory.
+4. Publish that library.
