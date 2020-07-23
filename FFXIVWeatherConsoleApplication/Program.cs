@@ -10,10 +10,10 @@ namespace FFXIVWeatherConsoleApplication
         static void Main(string[] args)
         {
             var weatherService = new FFXIVWeatherService();
-            var zone = "Eureka Pyros";
+            var zone = "eureka pyros";
             var count = 15U;
 
-            var stopwatch = new Stopwatch();
+            /*var stopwatch = new Stopwatch();
             for (var i = 0; i < 100000; i++)
             {
                 stopwatch.Start();
@@ -21,9 +21,9 @@ namespace FFXIVWeatherConsoleApplication
                 stopwatch.Stop();
             }
 
-            Console.WriteLine($"Finished in {stopwatch.ElapsedMilliseconds}ms.");
+            Console.WriteLine($"Finished in {stopwatch.ElapsedMilliseconds}ms.");*/
 
-            /*var forecast = weatherService.GetForecast(zone, count);
+            var forecast = weatherService.GetForecast(zone, count);
 
             Console.WriteLine($"Weather for {zone}:");
             Console.WriteLine("|\tWeather\t\t|\tTime\t|");
@@ -31,7 +31,7 @@ namespace FFXIVWeatherConsoleApplication
             foreach (var (weather, startTime) in forecast)
             {
                 Console.WriteLine($"|\t{(weather.ToString().Length < 8 ? weather.ToString() + '\t' : weather.ToString())}\t|\t{Math.Round((startTime - DateTime.UtcNow).TotalMinutes)}m\t|");
-            }*/
+            }
         }
     }
 }

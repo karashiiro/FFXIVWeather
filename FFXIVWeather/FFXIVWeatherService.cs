@@ -94,7 +94,8 @@ namespace FFXIVWeather
 
         private TerriType GetTerritory(string placeName, LangKind lang)
         {
-            var terriType = this.terriTypes.FirstOrDefault(tt => tt.GetName(lang) == placeName);
+            var ciPlaceName = placeName.ToLowerInvariant();
+            var terriType = this.terriTypes.FirstOrDefault(tt => tt.GetName(lang).ToLowerInvariant() == ciPlaceName);
             if (terriType == null) throw new ArgumentException("Specified place does not exist.", nameof(placeName));
             return terriType;
         }
