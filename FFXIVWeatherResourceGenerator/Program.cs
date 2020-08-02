@@ -13,9 +13,9 @@ namespace FFXIVWeatherResourceGenerator
 {
     class Program
     {
-        const string WeatherKindsOutputPath = "../../../../FFXIVWeather/Data/weatherKinds.json";
-        const string WeatherRateIndicesOutputPath = "../../../../FFXIVWeather/Data/weatherRateIndices.json";
-        const string TerriTypesOutputPath = "../../../../FFXIVWeather/Data/terriTypes.json";
+        const string WeatherKindsOutputPath = "FFXIVWeather/Data/weatherKinds.json";
+        const string WeatherRateIndicesOutputPath = "FFXIVWeather/Data/weatherRateIndices.json";
+        const string TerriTypesOutputPath = "FFXIVWeather/Data/terriTypes.json";
 
         static void Main(string[] args)
         {
@@ -168,7 +168,6 @@ namespace FFXIVWeatherResourceGenerator
             File.WriteAllText(WeatherKindsOutputPath, JsonConvert.SerializeObject(weatherKinds));
 
             Console.WriteLine("Done!");
-            Console.ReadKey();
         }
     }
 }
