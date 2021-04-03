@@ -59,7 +59,6 @@ namespace FFXIVWeatherResourceGenerator
             // XIVAPI
             Console.WriteLine("Requesting data from XIVAPI and FFCafe...");
             var terriTypes = new List<TerriType>();
-
             {
                 var page = 1;
                 var pageTotal = 1;
