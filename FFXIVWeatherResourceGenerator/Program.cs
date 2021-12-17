@@ -17,7 +17,7 @@ namespace FFXIVWeatherResourceGenerator
         const string WeatherRateIndicesOutputPath = "FFXIVWeather/Data/weatherRateIndices.json";
         const string TerriTypesOutputPath = "FFXIVWeather/Data/terriTypes.json";
 
-        static void Main(string[] args)
+        static void Main()
         {
             var http = new HttpClient();
 

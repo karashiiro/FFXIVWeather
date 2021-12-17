@@ -11,8 +11,6 @@
 	<Description>An FFXIV weather forecast library for systems without a local game installation.</Description>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<Version>1.0.14</Version>
-	<PackageLicenseExpression></PackageLicenseExpression>
-	<PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
