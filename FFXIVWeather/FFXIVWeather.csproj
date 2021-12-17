@@ -7,12 +7,12 @@
 	<Copyright>2020</Copyright>
 	<RepositoryUrl>https://github.com/karashiiro/FFXIVWeather</RepositoryUrl>
 	<PackageProjectUrl>https://github.com/karashiiro/FFXIVWeather</PackageProjectUrl>
-	<PackageTags>ffxiv</PackageTags>
-	<Description>FFXIV weather forecast library for C# applications</Description>
+	<PackageTags>ffxiv;weather</PackageTags>
+	<Description>An FFXIV weather forecast library for systems without a local game installation.</Description>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<Version>1.0.13</Version>
+	<Version>1.0.14</Version>
 	<PackageLicenseExpression></PackageLicenseExpression>
-	<PackageLicenseFile>README.md</PackageLicenseFile>
+	<PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
