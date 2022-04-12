@@ -11,13 +11,13 @@ using System.Net.Http;
 
 namespace FFXIVWeatherResourceGenerator
 {
-    class Program
+    public static class Program
     {
-        const string WeatherKindsOutputPath = "FFXIVWeather/Data/weatherKinds.json";
-        const string WeatherRateIndicesOutputPath = "FFXIVWeather/Data/weatherRateIndices.json";
-        const string TerriTypesOutputPath = "FFXIVWeather/Data/terriTypes.json";
+        private const string WeatherKindsOutputPath = "FFXIVWeather/Data/weatherKinds.json";
+        private const string WeatherRateIndicesOutputPath = "FFXIVWeather/Data/weatherRateIndices.json";
+        private const string TerriTypesOutputPath = "FFXIVWeather/Data/terriTypes.json";
 
-        static void Main()
+        public static void Main()
         {
             var http = new HttpClient();
 

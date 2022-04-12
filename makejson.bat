@@ -1,6 +1,6 @@
 @ECHO OFF
 
-.\FFXIVWeatherResourceGenerator\bin\Debug\netcoreapp3.1\FFXIVWeatherResourceGenerator.exe
+.\FFXIVWeatherResourceGenerator\bin\Debug\net6.0\FFXIVWeatherResourceGenerator.exe
 
 COPY .\FFXIVWeather\Data\*.json ..\ffxivweather-py\ffxivweather\store
 
