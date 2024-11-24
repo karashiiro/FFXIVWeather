@@ -10,7 +10,7 @@
 	<PackageTags>ffxiv;weather</PackageTags>
 	<Description>An FFXIV weather forecast library for systems without a local game installation.</Description>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-	<Version>1.0.16</Version>
+	<Version>1.0.17</Version>
   </PropertyGroup>
 
   <ItemGroup>
